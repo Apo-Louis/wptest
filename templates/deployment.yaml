@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-wordpress
+  labels:
+    app: {{ .Release.Name }}-wordpress
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-wordpress
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-wordpress
+    spec:
+      containers:
+        - name: wordpress
+          image: bitnami/wordpress:{{ .Values.appVersion }}
+          env:
+            - name: WORDPRESS_DATABASE_NAME
+              value: {{ .Values.mariadb.db.name }}
+            - name: WORDPRESS_DATABASE_USER
+              value: {{ .Values.mariadb.db.user }}
+            - name: WORDPRESS_DATABASE_PASSWORD
+              value: {{ .Values.mariadb.db.password }}
+            - name: WORDPRESS_DATABASE_HOST
+              value: {{ .Release.Name }}-mariadb
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP

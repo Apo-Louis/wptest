@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-wordpress
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    kubernetes.io/ingress.class: "nginx" # Assurez-vous d'utiliser l'Ingress Controller que vous avez installé
+    cert-manager.io/cluster-issuer: "letsencrypt-prod" # (optionnel) Si vous utilisez cert-manager pour gérer les certificats TLS
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: {{ .Values.ingress.host }}  # Le nom de domaine ou l'adresse que vous souhaitez utiliser
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-wordpress
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - {{ .Values.ingress.host }}  # Le même nom de domaine pour lequel vous voulez un certificat TLS
+      secretName: {{ .Release.Name }}-tls  # Secret pour le certificat TLS (si vous utilisez TLS)

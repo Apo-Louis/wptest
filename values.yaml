@@ -1,0 +1,31 @@
+wordpressUsername: admin
+wordpressPassword: password
+wordpressEmail: admin@example.com
+wordpressBlogName: My WordPress Blog
+
+mariadb:
+  enabled: true
+  db:
+    name: wordpress
+    user: wordpress
+    password: wordpress
+    rootPassword: rootpassword
+
+service:
+  type: LoadBalancer  # Utiliser un LoadBalancer pour exposer WordPress publiquement
+  port: 80
+
+ingress:
+  enabled: true
+  host: wordpress.example.com  # Remplacez par votre domaine
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+  tls:
+    enabled: true
+    secretName: wordpress-tls  # Remplacez par votre secret TLS si nécessaire
+
+persistence:
+  enabled: true
+  storageClass: "gp2"  # Utiliser une classe de stockage sur AWS
+  accessMode: ReadWriteOnce
+  size: 10Gi
