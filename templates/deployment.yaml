@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: wordpress
-          image: bitnami/wordpress:{{ .Values.appVersion }}
+          image: bitnami/wordpress:latest
           env:
             - name: WORDPRESS_DATABASE_NAME
               value: {{ .Values.mariadb.db.name }}
